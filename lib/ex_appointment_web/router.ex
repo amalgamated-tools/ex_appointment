@@ -18,7 +18,7 @@ defmodule ExAppointmentWeb.Router do
   end
 
   scope "/", ExAppointmentWeb do
-    pipe_through :browser
+    pipe_through [:browser, :require_authenticated_user]
 
     live "/", PageLive, :index
   end
@@ -60,6 +60,8 @@ defmodule ExAppointmentWeb.Router do
     post "/users/reset_password", UserResetPasswordController, :create
     get "/users/reset_password/:token", UserResetPasswordController, :edit
     put "/users/reset_password/:token", UserResetPasswordController, :update
+    get "/auth/:provider", UserOauthController, :request
+    get "/auth/:provider/callback", UserOauthController, :callback
   end
 
   scope "/", ExAppointmentWeb do

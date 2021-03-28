@@ -1,9 +1,11 @@
 defmodule ExAppointmentWeb.PageLive do
   use ExAppointmentWeb, :live_view
+  alias ExAppointment.Accounts
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: %{})}
+  def mount(_params, %{"user_token" => user_token}, socket) do
+    user = Accounts.get_user_by_session_token(user_token)
+    {:ok, assign(socket, query: "", results: %{}, current_user: user)}
   end
 
   @impl true

@@ -50,7 +50,8 @@ defmodule ExAppointment.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:ecto_psql_extras, "~> 0.2"},
       {:phx_gen_auth, "~> 0.6", only: [:dev], runtime: false},
-      {:ex_check, "~> 0.14.0", only: [:dev], runtime: false}
+      {:ueberauth, "~> 0.6"},
+      {:ueberauth_google, "~> 0.10"}
     ]
   end
 
