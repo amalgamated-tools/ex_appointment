@@ -31,7 +31,6 @@ jobs:
       - run: |
           mix do deps.get, compile  # get updated dependencies & compile them
           mix ecto.create
-          MIX_ENV=dev  mix check # code analysis using `ex_check`
           MIX_ENV=test mix test  # run all tests in project
 
       - save_cache: # generate and store mix cache
