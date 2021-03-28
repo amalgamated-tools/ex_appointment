@@ -1,0 +1,54 @@
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version here
+      - image: circleci/elixir:1.11
+
+      - image: circleci/postgres:latest
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: ex_appointment_test
+          POSTGRES_PASSWORD: postgres
+    working_directory: ~/repo
+    steps:
+      - checkout # check out source code to working directory
+
+      - run: mix local.hex --force # install Hex locally (without prompt)
+      - run: mix local.rebar --force # fetch a copy of rebar (without prompt)
+
+      - restore_cache: # restores saved mix cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          keys: # list of cache keys, in decreasing specificity
+            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v1-mix-cache-{{ .Branch }}
+            - v1-mix-cache
+      - restore_cache: # restores saved build cache
+          keys:
+            - v1-build-cache-{{ .Branch }}
+            - v1-build-cache
+
+      - run: |
+          mix do deps.get, compile  # get updated dependencies & compile them
+          mix ecto.create
+          MIX_ENV=test mix test  # run all tests in project
+
+      - save_cache: # generate and store mix cache
+          key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          paths: "deps"
+      - save_cache: # generate and store mix cache
+          key: v1-mix-cache-{{ .Branch }}
+          paths: "deps"
+      - save_cache: # generate and store mix cache
+          key: v1-mix-cache
+          paths: "deps"
+      - save_cache: # don't forget to save a *build* cache, too
+          key: v1-build-cache-{{ .Branch }}
+          paths: "_build"
+      - save_cache: # don't forget to save a *build* cache, too
+          key: v1-build-cache
+          paths: "_build"
+      # specify any bash command here prefixed with `run: `
+      - run: mix deps.get
+      - run: mix ecto.create
+      - run: mix test
