@@ -40,7 +40,10 @@ defmodule ExAppointmentWeb.Router do
 
     scope "/" do
       pipe_through :browser
-      live_dashboard "/dashboard", metrics: ExAppointmentWeb.Telemetry
+
+      live_dashboard "/dashboard",
+        metrics: ExAppointmentWeb.Telemetry,
+        ecto_repos: [ExAppointment.Repo]
     end
   end
 
