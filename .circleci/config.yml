@@ -12,7 +12,10 @@ jobs:
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       - image: circleci/postgres:latest
-
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: ex_appointment_test
+          POSTGRES_PASSWORD: postgres
     working_directory: ~/repo
     steps:
       - checkout
