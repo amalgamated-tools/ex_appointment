@@ -78,4 +78,10 @@ defmodule ExAppointmentWeb.Router do
     post "/users/confirm", UserConfirmationController, :create
     get "/users/confirm/:token", UserConfirmationController, :confirm
   end
+
+  scope "/auth", ExAppointmentWeb do
+    pipe_through(:browser)
+
+    get("/:provider", UserOAuthController, :index)
+  end
 end
